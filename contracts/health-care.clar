@@ -153,3 +153,20 @@
         (ok reward-amount)
     )
 )
+
+;; Read-Only Functions
+(define-read-only (get-patient-data (patient principal))
+    (map-get? patients patient)
+)
+
+(define-read-only (get-provider-info (provider principal))
+    (map-get? provider-registry provider)
+)
+
+(define-read-only (check-consent-status (patient principal) (provider principal))
+    (map-get? consent-records {patient: patient, provider: provider})
+)
+
+(define-read-only (get-access-logs (index uint))
+    (map-get? data-access-logs index)
+)
