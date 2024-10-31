@@ -66,3 +66,16 @@
     )
 )
 
+;; Provider Registration
+(define-public (register-provider (name (string-ascii 50)))
+    (let ((sender tx-sender))
+        (ok (map-set provider-registry
+            sender
+            {
+                name: name,
+                verified: false,
+                rating: u0
+            }
+        ))
+    )
+)
