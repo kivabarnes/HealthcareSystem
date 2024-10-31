@@ -115,3 +115,29 @@
         ))
     )
 )
+
+;; Data Access Control
+(define-public (request-data-access (patient principal) (data-type (string-ascii 20)))
+    (let (
+        (sender tx-sender)
+        (consent-status (unwrap! (map-get? consent-records {patient: patient, provider: sender}) err-unauthorized))
+    )
+        (asserts! (get granted consent-status) err-unauthorized)
+        (asserts! (< block-height (get expiration consent-status)) err-invalid-consent)
+
+        ;; Log the access
+        (map-set data-access-logs
+            (var-get log-index)
+            {
+                patient: patient,
+                provider: sender,
+                timestamp: block-height,
+                data-type: data-type
+            }
+        )
+        (var-set log-index (+ (var-get log-index) u1))
+
+        ;; Return encryption key if authorized
+        (ok (get encryption-key (unwrap! (map-get? patients patient) err-not-registered)))
+    )
+)
