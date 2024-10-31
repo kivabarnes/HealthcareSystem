@@ -100,3 +100,18 @@
         ))
     )
 )
+
+(define-public (revoke-consent (provider principal))
+    (let ((sender tx-sender))
+        (asserts! (is-some (map-get? patients sender)) err-not-registered)
+        (ok (map-set consent-records
+            {patient: sender, provider: provider}
+            {
+                granted: false,
+                timestamp: block-height,
+                expiration: u0,
+                access-type: "none"
+            }
+        ))
+    )
+)
