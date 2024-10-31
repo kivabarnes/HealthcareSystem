@@ -79,3 +79,24 @@
         ))
     )
 )
+
+;; Consent Management
+(define-public (grant-consent (provider principal) (access-type (string-ascii 20)) (duration uint))
+    (let (
+        (sender tx-sender)
+        (expiration (+ block-height duration))
+    )
+        (asserts! (is-some (map-get? patients sender)) err-not-registered)
+        (asserts! (is-some (map-get? provider-registry provider)) err-not-registered)
+
+        (ok (map-set consent-records
+            {patient: sender, provider: provider}
+            {
+                granted: true,
+                timestamp: block-height,
+                expiration: expiration,
+                access-type: access-type
+            }
+        ))
+    )
+)
