@@ -50,3 +50,19 @@
 ;; Data Variables
 (define-data-var log-index uint u0)
 (define-data-var token-reward uint u100)  ;; Base reward for sharing data
+
+;; Patient Registration
+(define-public (register-patient (encryption-key (buff 32)))
+    (let ((sender tx-sender))
+        (asserts! (is-none (get registered (map-get? patients sender))) err-already-registered)
+        (ok (map-set patients
+            sender
+            {
+                registered: true,
+                data-hash: none,
+                encryption-key: (some encryption-key)
+            }
+        ))
+    )
+)
+
