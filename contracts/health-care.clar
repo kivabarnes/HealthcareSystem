@@ -141,3 +141,15 @@
         (ok (get encryption-key (unwrap! (map-get? patients patient) err-not-registered)))
     )
 )
+
+;; Token Rewards
+(define-public (claim-sharing-reward (provider principal))
+    (let (
+        (sender tx-sender)
+        (reward-amount (var-get token-reward))
+    )
+        (asserts! (is-some (map-get? patients sender)) err-not-registered)
+        ;; Implementation would include token transfer logic
+        (ok reward-amount)
+    )
+)
